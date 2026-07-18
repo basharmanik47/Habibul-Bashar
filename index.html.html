@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Question For You ❤️</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="family">
+</head>
+<body>
+    <!-- Mouse Glow Effect Layer -->
+    <div class="mouse-glow" id="mouseGlow"></div>
+
+    <!-- Canvas for Floating Particles, Hearts, and Celebration Effects -->
+    <canvas id="magicCanvas"></canvas>
+
+    <!-- Main Container -->
+    <main class="app-container" id="mainContainer">
+        <!-- Interactive Card -->
+        <div class="glass-card heartbeat" id="proposalCard">
+            <h2 class="romantic-title">
+                <span>C</span><span>a</span><span>n</span>&nbsp;
+                <span>I</span>&nbsp;
+                <span>a</span><span>s</span><span>k</span>&nbsp;
+                <span>y</span><span>o</span><span>u</span>&nbsp;
+                <span>s</span><span>o</span><span>m</span><span>e</span><span>t</span><span>h</span><span>i</span><span>n</span><span>g</span><span>?</span>&nbsp;
+                <span>❤️</span>
+            </h2>
+            <p class="subtitle">You only need one click...</p>
+            <h1 class="main-question">Will you kiss me? 💋</h1>
+            
+            <div class="button-group">
+                <button class="btn btn-yes" id="btnYes">❤️ Yes, I will</button>
+                <button class="btn btn-no" id="btnNo">🙈 No</button>
+            </div>
+        </div>
+
+        <!-- Dynamic Micro-Messages -->
+        <div class="love-note" id="loveNote">💖 You make me smile.</div>
+    </main>
+
+    <!-- Date Selection Modal -->
+    <div class="modal-overlay" id="dateModal">
+        <div class="glass-card modal-card">
+            <h2>Yay!! ❤️</h2>
+            <p>When shall we go on our date?</p>
+            <div class="input-wrapper">
+                <input type="date" id="datePicker" min="2026-01-01">
+            </div>
+            <button class="btn btn-yes" id="btnConfirm">Confirm Date ✨</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

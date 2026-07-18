@@ -1,0 +1,325 @@
+/* --- Global Reset & Variables --- */
+:root {
+    --bg-gradient: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 40%, #f7aef8 80%, #b388ff 100%);
+    --card-bg: rgba(255, 255, 255, 0.45);
+    --card-border: rgba(255, 255, 255, 0.4);
+    --primary-love: #ff477e;
+    --primary-glow: rgba(255, 71, 126, 0.5);
+    --text-dark: #4a2840;
+    --text-light: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-gradient);
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-dark);
+    position: relative;
+    user-select: none;
+}
+
+/* --- Core Elements & Canvas --- */
+#magicCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.mouse-glow {
+    position: fixed;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 71, 126, 0.05) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.app-container {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    opacity: 0;
+    animation: fadeInPage 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* --- Premium Glassmorphism Cards --- */
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 8px 32px 0 rgba(255, 71, 126, 0.15),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,255,255,0));
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* --- Typography & Header Animations --- */
+.romantic-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    opacity: 0.8;
+    display: inline-block;
+}
+
+.romantic-title span {
+    display: inline-block;
+    animation: waveLetter 2s ease-in-out infinite;
+    animation-delay: calc(0.06s * var(--i, 1));
+}
+
+/* Distribute variable delays via fallback loop in JS later */
+.subtitle {
+    font-size: 0.95rem;
+    font-weight: 300;
+    margin-bottom: 24px;
+    opacity: 0.7;
+}
+
+.main-question {
+    font-family: 'Dancing Script', cursive;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: #3d1c33;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+}
+
+/* --- Interactive Buttons --- */
+.button-group {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    min-height: 60px;
+    width: 100%;
+}
+
+.btn {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                box-shadow 0.3s ease, 
+                background-color 0.3s ease;
+    outline: none;
+}
+
+.btn-yes {
+    background: var(--primary-love);
+    color: var(--text-light);
+    box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.btn-yes:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 25px rgba(255, 71, 126, 0.7);
+    background: #ff2a66;
+}
+
+.btn-no {
+    background: rgba(255, 255, 255, 0.7);
+    color: var(--text-dark);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 10;
+}
+
+.btn-no.evading {
+    position: fixed;
+    z-index: 1000;
+    transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* --- Evasion Taunts --- */
+.taunt-bubble {
+    position: fixed;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--primary-love);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+    z-index: 999;
+    animation: popFade 1.2s forwards ease-out;
+}
+
+/* --- Floating Ambient Micro-Notes --- */
+.love-note {
+    margin-top: 30px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    opacity: 0.6;
+    animation: gentlePulse 3s infinite ease-in-out;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 6px 16px;
+    border-radius: 20px;
+}
+
+/* --- Modal Styling --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(74, 40, 64, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-card {
+    transform: scale(0.85);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 400px;
+}
+
+.modal-overlay.active .modal-card {
+    transform: scale(1);
+}
+
+.modal-card h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--primary-love);
+}
+
+.modal-card p {
+    margin-bottom: 24px;
+    font-weight: 300;
+}
+
+.input-wrapper {
+    margin-bottom: 24px;
+}
+
+input[type="date"] {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--text-dark);
+    outline: none;
+    width: 100%;
+    text-align: center;
+}
+
+/* --- Success State Screen --- */
+.success-date-card {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.7) !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 0 30px rgba(255, 71, 126, 0.4) !important;
+    animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.success-date-card h3 {
+    font-size: 1.4rem;
+    color: var(--primary-love);
+}
+
+/* --- Keyframe Animations --- */
+@keyframes fadeInPage {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes waveLetter {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); color: var(--primary-love); }
+}
+
+@keyframes popFade {
+    0% { transform: scale(0.6) translateY(0); opacity: 0; }
+    20% { transform: scale(1) translateY(-10px); opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(-30px); opacity: 0; }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    70% { transform: scale(0.9); opacity: 0.9; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.heartbeat {
+    animation: heartbeat 3.5s infinite ease-in-out;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.015); box-shadow: 0 12px 40px 0 rgba(255, 71, 126, 0.25); }
+}
+
+@keyframes gentlePulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50% { transform: scale(1.03); opacity: 0.9; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .main-question { font-size: 2.25rem; }
+    .glass-card { padding: 30px 20px; }
+    .button-group { flex-direction: column; gap: 15px; align-items: center;}
+    .btn { width: 100%; max-width: 240px; }
+}
